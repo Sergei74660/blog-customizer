@@ -44,13 +44,13 @@ type TFormSelect = {
 
 // Форма настройки отображения статьи
 export const ArticleParamsForm = (props: FormState) => {
-	const [isOpen, setIsOpen] = useState(false); // Состояние открыта ли панель настроек
+	const [isMenuOpen, setIsMenuOpen] = useState(false); // Состояние открыта ли панель настроек
 	const sideBarRef = useRef<HTMLElement>(null); // Референс на панель
 	const [formState, setFormState] = useState<ArticleStateType>(props.state); // Данные формы
-	const close = (): void | undefined => setIsOpen(false); // Скрыть панель
+	const close = (): void | undefined => setIsMenuOpen(false); // Скрыть панель
 	// Хук закрытие при клике вне панели или нажатии Escape
 	useCloseOnOutsideClickOrEsc({
-		isOpenElement: isOpen,
+		isOpenElement: isMenuOpen,
 		elementRef: sideBarRef,
 		onClose: close,
 	});
@@ -70,7 +70,7 @@ export const ArticleParamsForm = (props: FormState) => {
 	};
 	// Обработка кликов вне панели
 	useEffect(() => {
-		if (!isOpen) {
+		if (!isMenuOpen) {
 			return;
 		}
 		const handleClickOverlay = (event: MouseEvent) => {
@@ -78,14 +78,14 @@ export const ArticleParamsForm = (props: FormState) => {
 				sideBarRef.current &&
 				!sideBarRef.current.contains(event.target as Node)
 			) {
-				setIsOpen(false);
+				setIsMenuOpen(false);
 			}
 		};
 
 		document.addEventListener('click', handleClickOverlay);
 
 		return document.removeEventListener('click', handleClickOverlay);
-	}, [isOpen]);
+	}, [isMenuOpen]);
 	// Отправить форму
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
@@ -101,13 +101,13 @@ export const ArticleParamsForm = (props: FormState) => {
 	return (
 		<>
 			<ArrowButton
-				isOpen={isOpen}
+				isOpen={isMenuOpen}
 				onClick={() => {
-					setIsOpen((prevState) => !prevState);
+					setIsMenuOpen((prevState) => !prevState);
 				}}
 			/>
 			<aside
-				className={clsx(styles.container, isOpen && styles.container_open)}
+				className={clsx(styles.container, isMenuOpen && styles.container_open)}
 				ref={sideBarRef}>
 				<form
 					className={styles.form}
